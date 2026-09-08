@@ -22,7 +22,8 @@ concurrency:
   group: pr-ci-sweeper
   cancel-in-progress: false
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   sweep:
