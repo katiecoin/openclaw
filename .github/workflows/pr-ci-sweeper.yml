@@ -17,8 +17,7 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-  GH_APP_PRIMARY_AVAILABLE: ${{ secrets.GH_APP_PRIVATE_KEY != '' }}
-  GH_APP_FALLBACK_AVAILABLE: ${{ secrets.GH_APP_PRIVATE_KEY_FALLBACK != '' }}
+
 
 concurrency:
   group: pr-ci-sweeper
@@ -43,14 +42,14 @@ jobs:
       # sweep's re-fire lane is known to work with.
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # zizmor: ignore[github-app] v3
         id: app-token
-        if: ${{ env.GH_APP_PRIMARY_AVAILABLE == 'true' }}
+        if: ${{ secrets.GH_APP_PRIVATE_KEY != '' }}
         continue-on-error: true
         with:
           app-id: "2729701"
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # zizmor: ignore[github-app] v3
         id: app-token-fallback
-        if: ${{ env.GH_APP_FALLBACK_AVAILABLE == 'true' && (steps.app-token.outcome == 'failure' || steps.app-token.outcome == 'skipped') }}
+        if: ${{ secrets.GH_APP_PRIVATE_KEY_FALLBACK != '' && (steps.app-token.outcome == 'failure' || steps.app-token.outcome == 'skipped') }}
         continue-on-error: true
         with:
           app-id: "2971289"
